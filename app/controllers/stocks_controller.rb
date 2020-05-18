@@ -3,14 +3,20 @@ class StocksController < ApplicationController
         if params[:stock].present?
             @stock = Stock.new_lookup(params[:stock])
             if @stock
-                render 'users/portfolio'
+                respond_to do |format|
+                    format.js {render partial: 'users/results'}
+                end
             else
-                flash[:alert] = "Enter valid symbol"
-                redirect_to portfolio_path
+                respond_to do |format|
+                    flash.now[:alert] = "Enter valid symbol"
+                    format.js {render partial: 'users/results'}
+                end
             end
         else
-            flash[:alert] = "Enter a symbol to search"
-            redirect_to portfolio_path
+            respond_to do |format|
+                flash[:alert] = "Enter a symbol to search"
+                format.js {render partial: 'users/results'}
+            end
         end
     end
 end
